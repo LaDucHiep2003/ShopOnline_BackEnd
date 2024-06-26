@@ -1,6 +1,7 @@
 
 const Product = require('../Models/product.model')
 const searchHelper = require("../helper/search.helper")
+const paginationHelper = require("../helper/pagination.helper")
 
 module.exports.index = async (req, res) => {
     const find = {
@@ -29,8 +30,20 @@ module.exports.index = async (req, res) => {
     }else{
         Sort.position = "desc"
     }
+
+    // Pagination
+    const countTasks = await Product.countDocuments(find)
+
+    let objectPagination = paginationHelper(
+        {
+            currentPage: 1,
+            limitItems: 2
+        },
+        req.query,
+        countTasks
+    )
     
-    const record = await Product.find(find).sort(Sort)
+    const record = await Product.find(find).limit(objectPagination.limitItems).skip(objectPagination.skip).sort(Sort)
 
     res.json(record)
 }
