@@ -6,17 +6,31 @@ module.exports.index = async (req, res) => {
     const find = {
         deleted: false
     }
+
+    // Status
     if(req.query.status){
         find.status = req.query.status
     }
 
+    // Search
     const objectSearch = searchHelper(req.query)
 
     if (objectSearch.regex) {
         find.title = objectSearch.regex
     }
+
+    // Sort
+    const Sort = {
+
+    }
+
+    if(req.query.sortKey && req.query.sortValue){
+        Sort[req.query.sortKey] = req.query.sortValue
+    }else{
+        Sort.position = "desc"
+    }
     
-    const record = await Product.find(find)
+    const record = await Product.find(find).sort(Sort)
 
     res.json(record)
 }
@@ -76,11 +90,13 @@ module.exports.delete = async (req, res) => {
 
 module.exports.create = async (req, res) => {
     try {
-
-        req.body.price = parseInt(req.body.price)
-        req.body.discountPercentage = parseInt(req.body.discountPercentage)
-        req.body.stock = parseInt(req.body.stock)
-        req.body.position = parseInt(req.body.position)
+        if(req.body.position){
+            req.body.position = parseInt(req.body.position)
+        }
+        else{
+            const count = await Product.countDocuments()
+            req.body.position = count + 1
+        }
 
         console.log(req.body);
         const product = new Product(req.body)
