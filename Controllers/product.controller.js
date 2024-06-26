@@ -1,10 +1,21 @@
 
 const Product = require('../Models/product.model')
+const searchHelper = require("../helper/search.helper")
 
 module.exports.index = async (req, res) => {
     const find = {
         deleted: false
     }
+    if(req.query.status){
+        find.status = req.query.status
+    }
+
+    const objectSearch = searchHelper(req.query)
+
+    if (objectSearch.regex) {
+        find.title = objectSearch.regex
+    }
+    
     const record = await Product.find(find)
 
     res.json(record)
