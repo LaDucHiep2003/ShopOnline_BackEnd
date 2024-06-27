@@ -7,6 +7,7 @@ const productCategorySchema = new mongoose.Schema(
         name: { type: String, maxLength: 255 },
         image: { type: String },
         slug: { type: String, slug: 'name'},
+        description : {type : String},
         position : {type : Number},
         deleted : {
             type : Boolean,
