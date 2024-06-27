@@ -1,6 +1,7 @@
 
 const productCategory = require("../Models/category.model")
 const searchHelper = require("../helper/search.helper")
+const createTree = require("../helper/createTree.helper")
 // [GET] /admin/product-category
 module.exports.index = async (req, res) => {
     const find = {
@@ -31,8 +32,9 @@ module.exports.index = async (req, res) => {
     }
 
     const products = await productCategory.find(find).sort(Sort)
+    const newProduct = createTree.tree(products)
 
-    res.json(products)
+    res.json(newProduct)
 }
 
 //[PATCH] /admin/product-category/change-status/:id
