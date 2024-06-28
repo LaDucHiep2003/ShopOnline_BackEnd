@@ -83,3 +83,34 @@ module.exports.detail = async (req, res) => {
     })
     res.json(record)
 }
+
+module.exports.permissions = async (req, res) => {
+    let find = {
+        deleted : false
+    }
+
+    const records = await Role.find(find)
+    res.json(records)
+}
+
+module.exports.addPermissions = async (req, res) => {
+    try {
+        const permissions = req.body.permissions
+        console.log(permissions);
+        for (const item of permissions) {
+            const id = item.id
+            const permissions = item.permissions
+            await Role.updateOne({_id : id},{permissions : permissions})
+        }
+        res.json({
+            code: 200,
+            message: "Cập nhật thành công! ",
+        })
+
+    } catch (error) {
+        res.json({
+            code: 400,
+            message: "Lỗi"
+        })
+    }
+}
