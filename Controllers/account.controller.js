@@ -72,3 +72,52 @@ module.exports.create = async (req, res) => {
         })
     }
 }
+
+module.exports.edit = async (req, res) => {
+    try {
+        const emailExits = await Account.findOne({
+            _id : {$ne  : req.params.id},
+            email : req.body.email,
+            deleted : false
+        })
+    
+        if(emailExits){
+            res.json({
+                code: 200,
+                message: "Email đã tồn tại",
+            })
+            return;
+        }
+        else{
+            if(req.body.passWord){
+                req.body.passWord = md5(req.body.passWord)
+            }
+            else{
+                delete req.body.passWord
+            }
+            await Account.updateOne({_id : req.params.id},req.body)
+        }
+        res.json({
+            code: 200,
+            message: "Cập nhật thành công",
+            data: data
+        })
+
+    } catch (error) {
+        res.json({
+            code: 400,
+            message: "Lỗi"
+        })
+    }
+}
+
+module.exports.detail = async (req, res) => {
+    const id = req.params.id
+    const record = await Account.findOne({
+        _id : id,
+        deleted : false
+    }).select("-passWord -token");
+
+
+    res.json(record)
+}
