@@ -36,6 +36,7 @@ module.exports.login = async (req, res) => {
 
     const token = user.token;
     res.cookie("token", token)
+    console.log("ok");
     res.json({
         code: 400,
         message: "Đăng nhập thành công",
@@ -43,4 +44,21 @@ module.exports.login = async (req, res) => {
     })
 
 
+}
+
+module.exports.detailAcc = async (req, res) => {
+    const token = req.cookies.token
+    const user = await Account.findOne({ token : token, deleted : false})
+
+    console.log(user);
+    res.json(user)
+}
+
+module.exports.logout = (req, res) => {
+    res.clearCookie("token")
+
+    res.json({
+        code: 400,
+        message: "Đăng xuất thành công",
+    })
 }
