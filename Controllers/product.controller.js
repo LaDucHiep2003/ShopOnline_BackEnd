@@ -161,3 +161,13 @@ module.exports.detail = async (req, res) => {
     })
     res.json(product)
 }
+
+// [GET] /api/product/detail/:id
+module.exports.detailProduct = async (req, res) => {
+    const slug = req.params.slug
+    const product = await Product.findOne({
+        slug : slug,
+        deleted : false
+    })
+    res.json(product)
+}

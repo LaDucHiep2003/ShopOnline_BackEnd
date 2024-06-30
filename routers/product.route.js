@@ -9,4 +9,5 @@ router.post('/create',productController.create)
 router.delete('/delete/:id',productController.delete)
 router.patch('/edit/:id',productController.edit)
 router.get('/detail/:id',productController.detail)
+router.get('/detailProduct/:slug',productController.detailProduct)
 module.exports = router
